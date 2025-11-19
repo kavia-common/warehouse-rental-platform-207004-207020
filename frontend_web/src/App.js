@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import logo from './logo.svg';
 import './App.css';
+import Header from './components/Header';
+import Footer from './components/Footer';
+import AppRouter from './AppRouter';
 
 // PUBLIC_INTERFACE
 function App() {
@@ -17,31 +19,29 @@ function App() {
   };
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <button 
-          className="theme-toggle" 
-          onClick={toggleTheme}
-          aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
-        >
-          {theme === 'light' ? '🌙 Dark' : '☀️ Light'}
-        </button>
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <p>
-          Current theme: <strong>{theme}</strong>
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="App" data-testid="app">
+      <Header />
+      <button
+        className="theme-toggle"
+        onClick={toggleTheme}
+        aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
+        style={{
+          position: 'fixed',
+          top: 19,
+          right: 24,
+          zIndex: 110,
+        }}
+      >
+        {theme === 'light' ? '🌙 Dark' : '☀️ Light'}
+      </button>
+      <main style={{
+        minHeight: 'calc(100vh - 161px)',
+        background: 'linear-gradient(120deg, rgba(37,99,235,0.04) 0%, #f9fafb 100%)',
+        padding: '0 0 0 0'
+      }}>
+        <AppRouter />
+      </main>
+      <Footer />
     </div>
   );
 }
