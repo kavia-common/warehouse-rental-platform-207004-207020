@@ -1,10 +1,12 @@
-import { render, screen, fireEvent, act } from '@testing-library/react';
+import { render, screen, fireEvent, act, cleanup } from '@testing-library/react';
 import ContactForm from '../components/ContactForm';
 
 const listing = {
   id: 4,
   title: 'Large Distribution Center',
 };
+
+afterEach(cleanup);
 
 describe('ContactForm', () => {
   it('renders all fields, header, and buttons', () => {
@@ -37,7 +39,6 @@ describe('ContactForm', () => {
     fireEvent.change(screen.getByLabelText(/message/i), { target: { value: 'Hi!' } });
     fireEvent.submit(screen.getByRole('form'));
 
-    // Wait for fake timer to elapse
     await act(async () => {
       jest.advanceTimersByTime(700);
     });

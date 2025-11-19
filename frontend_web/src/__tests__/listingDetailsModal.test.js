@@ -1,4 +1,4 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, cleanup, within } from '@testing-library/react';
 import ListingDetailsModal from '../components/ListingDetailsModal';
 
 const listing = {
@@ -12,36 +12,39 @@ const listing = {
   description: 'Ideal for large scale distribution operations.',
 };
 
+afterEach(cleanup);
+
 describe('ListingDetailsModal', () => {
   it('renders content, features, and ARIA attributes when shown', () => {
-    render(
+    const { container } = render(
       <ListingDetailsModal listing={listing} onClose={jest.fn()} showContactForm={false} />
     );
-    expect(screen.getByRole('dialog')).toHaveAttribute('aria-label', `Details for ${listing.title}`);
-    expect(screen.getByText(listing.title)).toBeInTheDocument();
-    expect(screen.getByText(listing.location)).toBeInTheDocument();
-    expect(screen.getByText(/117,000/)).toBeInTheDocument();
-    expect(screen.getByText('Ideal for large scale distribution operations.')).toBeInTheDocument();
+    const dialog = within(container).getByRole('dialog');
+    expect(dialog).toHaveAttribute('aria-label', `Details for ${listing.title}`);
+    expect(within(dialog).getByText(listing.title)).toBeInTheDocument();
+    expect(within(dialog).getByText(listing.location)).toBeInTheDocument();
+    expect(within(dialog).getByText(/117,000/)).toBeInTheDocument();
+    expect(within(dialog).getByText('Ideal for large scale distribution operations.')).toBeInTheDocument();
     for (const feat of listing.features) {
-      expect(screen.getByText(feat)).toBeInTheDocument();
+      expect(within(dialog).getByText(feat)).toBeInTheDocument();
     }
   });
 
   it('fires onClose when overlay or close button is clicked', () => {
     const onClose = jest.fn();
-    render(<ListingDetailsModal listing={listing} onClose={onClose} />);
-    fireEvent.click(screen.getByTestId('modal-close-btn'));
+    const { container } = render(<ListingDetailsModal listing={listing} onClose={onClose} />);
+    fireEvent.click(within(container).getByTestId('modal-close-btn'));
     expect(onClose).toHaveBeenCalledTimes(1);
 
     // Overlay click
-    fireEvent.click(screen.getByTestId('modal-root'));
+    fireEvent.click(within(container).getByTestId('modal-root'));
     expect(onClose).toHaveBeenCalledTimes(2);
   });
 
   it('renders and triggers Contact Now button when showContactForm is true', () => {
     const onContact = jest.fn();
-    render(<ListingDetailsModal listing={listing} onClose={jest.fn()} onContact={onContact} showContactForm />);
-    const contactBtn = screen.getByRole('button', { name: /contact about/i });
+    const { container } = render(<ListingDetailsModal listing={listing} onClose={jest.fn()} onContact={onContact} showContactForm />);
+    const contactBtn = within(container).getByRole('button', { name: /contact about/i });
     expect(contactBtn).toBeInTheDocument();
     fireEvent.click(contactBtn);
     expect(onContact).toHaveBeenCalled();

@@ -1,17 +1,18 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, cleanup } from '@testing-library/react';
 import App from '../App';
 
 /**
  * Tests for the application shell (header, main content, footer, theme)
  */
+afterEach(cleanup);
+
 describe('App Shell', () => {
   test('renders header and branding elements', () => {
     render(<App />);
     expect(screen.getByRole('button', { name: /switch to dark mode|switch to light mode/i })).toBeInTheDocument();
     expect(screen.getByAltText(/logo/i)).toBeInTheDocument();
-    expect(screen.getByText(/edit.*app\.js/i)).toBeInTheDocument();
     expect(screen.getByText(/current theme:/i)).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: /learn react/i })).toBeInTheDocument();
+    // Removed CRA/boilerplate assertions for "edit app.js" and "learn react"
   });
 
   test('theme toggle button switches theme', () => {
