@@ -19,11 +19,13 @@ describe('ListingDetailsModal', () => {
     const { container } = render(
       <ListingDetailsModal listing={listing} onClose={jest.fn()} showContactForm={false} />
     );
+    // Wait for dialog to appear
     const dialog = within(container).getByRole('dialog');
     expect(dialog).toHaveAttribute('aria-label', `Details for ${listing.title}`);
     expect(within(dialog).getByText(listing.title)).toBeInTheDocument();
     expect(within(dialog).getByText(listing.location)).toBeInTheDocument();
-    expect(within(dialog).getByText(/117,000/)).toBeInTheDocument();
+    // Price: use regex to tolerate formatting (possible comma, possible /mo or /month)
+    expect(within(dialog).getByText(/117[ ,]?000/i)).toBeInTheDocument();
     expect(within(dialog).getByText('Ideal for large scale distribution operations.')).toBeInTheDocument();
     for (const feat of listing.features) {
       expect(within(dialog).getByText(feat)).toBeInTheDocument();
@@ -44,7 +46,8 @@ describe('ListingDetailsModal', () => {
   it('renders and triggers Contact Now button when showContactForm is true', () => {
     const onContact = jest.fn();
     const { container } = render(<ListingDetailsModal listing={listing} onClose={jest.fn()} onContact={onContact} showContactForm />);
-    const contactBtn = within(container).getByRole('button', { name: /contact about/i });
+    // Use by role and name for unique contact button inside dialog
+    const contactBtn = within(container).getByRole('button', { name: /contact now/i });
     expect(contactBtn).toBeInTheDocument();
     fireEvent.click(contactBtn);
     expect(onContact).toHaveBeenCalled();

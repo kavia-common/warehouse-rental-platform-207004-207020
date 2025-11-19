@@ -7,7 +7,7 @@ afterEach(cleanup);
 describe('Warehouse Rental Platform Integration', () => {
   it('renders the core layout (Header, search bar, grid, Footer)', async () => {
     render(<App />);
-    expect(screen.getByRole('heading', { name: /warehouses/i })).toBeInTheDocument(); // Header
+    expect(screen.getByRole('heading', { name: /available warehouses/i })).toBeInTheDocument(); // Header
     expect(screen.getByRole('search')).toBeInTheDocument();
     expect(screen.getByRole('main')).toBeInTheDocument();
     expect(screen.getByText(/contact us/i)).toBeInTheDocument(); // Footer
@@ -16,7 +16,8 @@ describe('Warehouse Rental Platform Integration', () => {
   it('filters listings via search bar', async () => {
     render(<App />);
     // Use testid for search input if available for disambiguation
-    const searchInput = screen.getByPlaceholderText(/search title/i);
+    // Use the generic input field for search (by aria-label)
+    const searchInput = screen.getByLabelText(/search by title|search by title or location/i);
     act(() => {
       fireEvent.change(searchInput, { target: { value: 'Cold' } });
     });
@@ -27,13 +28,14 @@ describe('Warehouse Rental Platform Integration', () => {
   it('shows warehouse details on card click, and closes when clicking close', async () => {
     render(<App />);
     // Get all detail buttons in the document
-    const cardBtns = await screen.findAllByRole('button', { name: /details/i });
+    const cardBtns = await screen.findAllByRole('button', { name: /view details/i });
     expect(cardBtns.length).toBeGreaterThan(0);
     fireEvent.click(cardBtns[0]);
     const dialog = await screen.findByRole('dialog');
     expect(dialog).toBeInTheDocument();
     expect(within(dialog).getByText(/contact now/i)).toBeInTheDocument();
-    const closeBtn = within(dialog).getByRole('button', { name: /close details/i });
+    // The close button is only labeled "Close details modal", get by testid for reliability
+    const closeBtn = within(dialog).getByTestId('modal-close-btn');
     fireEvent.click(closeBtn);
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
   });
@@ -41,11 +43,11 @@ describe('Warehouse Rental Platform Integration', () => {
   it('can open contact form and submit', async () => {
     render(<App />);
     // Open modal
-    const cardBtn = (await screen.findAllByRole('button', { name: /details/i }))[0];
+    const cardBtn = (await screen.findAllByRole('button', { name: /view details/i }))[0];
     fireEvent.click(cardBtn);
     // Only search within dialog for Contact Now
     const dialog = await screen.findByRole('dialog');
-    const contactBtn = within(dialog).getByRole('button', { name: /contact about/i });
+    const contactBtn = within(dialog).getByRole('button', { name: /contact now/i });
     fireEvent.click(contactBtn);
     expect(within(dialog).getByText(/contact about/i)).toBeInTheDocument();
     // Fill the form (within dialog scope, if it is modal-based)
@@ -55,17 +57,15 @@ describe('Warehouse Rental Platform Integration', () => {
     fireEvent.change(within(dialog).getByLabelText(/message/i), { target: { value: 'Enquiry' } });
     fireEvent.submit(within(dialog).getByRole('form'));
     expect(await within(dialog).findByText(/thank you for your interest/i)).toBeInTheDocument();
-    // Close form
-    // get All close buttons if multiple, pick first in modal/dialog
-    const possibleCloseBtns = within(dialog).queryAllByRole('button', { name: /close/i });
-    const closeBtn = possibleCloseBtns[0] || screen.getByRole('button', { name: /close/i });
+    // Close form using testid (unique inside contact form content)
+    const closeBtn = within(dialog).getByTestId('contact-close-btn');
     fireEvent.click(closeBtn);
     expect(screen.queryByText(/thank you for your interest/i)).not.toBeInTheDocument();
   });
 
   it('shows error on invalid contact form', async () => {
     render(<App />);
-    const cardBtn = (await screen.findAllByRole('button', { name: /details/i }))[0];
+    const cardBtn = (await screen.findAllByRole('button', { name: /view details/i }))[0];
     fireEvent.click(cardBtn);
     const dialog = await screen.findByRole('dialog');
     const contactNowBtn = within(dialog).getByRole('button', { name: /contact now/i });

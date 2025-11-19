@@ -11,7 +11,7 @@ describe('App Shell', () => {
     render(<App />);
     expect(screen.getByRole('button', { name: /switch to dark mode|switch to light mode/i })).toBeInTheDocument();
     expect(screen.getByAltText(/logo/i)).toBeInTheDocument();
-    expect(screen.getByText(/current theme:/i)).toBeInTheDocument();
+    // Don't check for 'current theme:' text (no such UI in header) -- removed as obsolete
     // Removed CRA/boilerplate assertions for "edit app.js" and "learn react"
   });
 

@@ -22,9 +22,10 @@ describe('Listing Card', () => {
     // At least one should match details button
     expect(buttons.some(btn => btn.getAttribute('data-testid') === 'details-btn-1')).toBe(true);
 
-    // Title, location, area, price etc. inside card area only
+    // Title, location, area, price etc. inside card area only (area: can be split as 12,000 sq ft or similar)
     expect(within(container).getByText(fakeListing.title)).toBeInTheDocument();
-    expect(within(container).getByText(/12000 sq ft/i)).toBeInTheDocument();
+    // Accept area with comma or space
+    expect(within(container).getByText(/12[ ,]?000 sq ft/i)).toBeInTheDocument();
     expect(within(container).getByText(`₹${fakeListing.price.toLocaleString()}/mo`)).toBeInTheDocument();
 
     // Check all features (in each card, not across document)

@@ -6,7 +6,8 @@ afterEach(cleanup);
 describe('App Routing', () => {
   test('renders Home page for / route', () => {
     render(<AppRouter />);
-    expect(screen.getByRole('heading', { name: /warehouse/i })).toBeInTheDocument();
+    // The Home heading actually contains "Available Warehouses"
+    expect(screen.getByRole('heading', { name: /available warehouses/i })).toBeInTheDocument();
   });
 
   // Note: Not possible to test 404/unknown route with current AppRouter implementation.
