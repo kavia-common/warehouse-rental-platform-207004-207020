@@ -28,9 +28,9 @@ describe('Listing Card', () => {
     expect(within(container).getByText(`₹${fakeListing.price.toLocaleString()}/mo`)).toBeInTheDocument();
 
     // Check all features (in each card, not across document)
-    for (const feat of fakeListing.features) {
+    fakeListing.features.forEach(feat => {
       expect(within(container).getByText(feat)).toBeInTheDocument();
-    }
+    });
   });
 
   test('calls onClick when card or button is clicked', () => {
