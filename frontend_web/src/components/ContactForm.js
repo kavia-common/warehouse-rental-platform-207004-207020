@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { oceanTheme } from '../theme';
 
-// PUBLIC_INTERFACE
 /**
  * Contact form to inquire about warehouse listing. (UI, no backend.)
  * Props:
@@ -9,6 +8,7 @@ import { oceanTheme } from '../theme';
  *   onSubmit (function): called with {name, email, phone, message}
  *   onCancel (function): optional, when user closes form
  */
+// PUBLIC_INTERFACE
 export default function ContactForm({ listing, onSubmit, onCancel }) {
   const [form, setForm] = useState({ name: '', email: '', phone: '', message: '' });
   const [status, setStatus] = useState('idle');
@@ -57,8 +57,14 @@ export default function ContactForm({ listing, onSubmit, onCancel }) {
         fontSize: 18
       }}>
         <div>Thank you for your interest!<br />We will contact you soon.</div>
-        {onCancel && <button onClick={onCancel} style={{
-          background: oceanTheme.secondary, color: '#fff', border: 0, borderRadius: 7, fontWeight: 600, fontSize: 15, marginTop: 22, padding: '10px 18px'}}>Close</button>}
+        {onCancel && <button
+          onClick={onCancel}
+          style={{
+            background: oceanTheme.secondary, color: '#fff', border: 0, borderRadius: 7, fontWeight: 600, fontSize: 15, marginTop: 22, padding: '10px 18px'
+          }}
+          data-testid="contact-close-btn"
+          aria-label="Close Contact Confirmation"
+        >Close</button>}
       </div>
     );
   }
@@ -105,7 +111,8 @@ export default function ContactForm({ listing, onSubmit, onCancel }) {
             }}
           />
           {errors[field] && <div style={{
-            color: oceanTheme.error || '#EF4444', fontSize: 13, marginLeft: 3, marginTop: 2}}>{errors[field]}</div>}
+            color: oceanTheme.error || '#EF4444', fontSize: 13, marginLeft: 3, marginTop: 2
+          }}>{errors[field]}</div>}
         </label>
       ))}
       <label style={{ display: 'block', margin: '19px 0 0 0', fontWeight: 600 }}>
@@ -129,11 +136,11 @@ export default function ContactForm({ listing, onSubmit, onCancel }) {
             color: oceanTheme.text
           }}
         />
-        {errors.message && <div style={{color: oceanTheme.error || '#EF4444', fontSize: 13, marginLeft: 3, marginTop: 2}}>
+        {errors.message && <div style={{ color: oceanTheme.error || '#EF4444', fontSize: 13, marginLeft: 3, marginTop: 2 }}>
           {errors.message}
         </div>}
       </label>
-      <div style={{display: 'flex', justifyContent: 'flex-end', gap: 14, marginTop: 26}}>
+      <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 14, marginTop: 26 }}>
         {onCancel && (
           <button
             type="button"
@@ -141,6 +148,8 @@ export default function ContactForm({ listing, onSubmit, onCancel }) {
             style={{
               background: '#F3F4F6', color: oceanTheme.primary, border: 0, borderRadius: 7, fontWeight: 600, fontSize: 15, padding: '10px 18px', opacity: .78
             }}
+            data-testid="contact-cancel-btn"
+            aria-label="Cancel Contact Form"
           >Cancel</button>
         )}
         <button
@@ -158,6 +167,8 @@ export default function ContactForm({ listing, onSubmit, onCancel }) {
             cursor: 'pointer',
             opacity: status === 'submitting' ? 0.65 : 1
           }}
+          data-testid="contact-submit-btn"
+          aria-label="Send Message"
         >
           {status === 'submitting' ? 'Sending...' : 'Send'}
         </button>

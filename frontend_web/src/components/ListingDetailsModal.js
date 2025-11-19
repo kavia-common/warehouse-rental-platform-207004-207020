@@ -1,7 +1,6 @@
 import React from 'react';
 import { oceanTheme } from '../theme';
 
-// PUBLIC_INTERFACE
 /**
  * Modal for displaying detailed info about a warehouse listing.
  * Props:
@@ -10,6 +9,7 @@ import { oceanTheme } from '../theme';
  *   onContact: function() (optional)
  *   showContactForm: boolean (default: true)
  */
+// PUBLIC_INTERFACE
 export default function ListingDetailsModal({ listing, onClose, onContact, showContactForm = true }) {
   if (!listing) return null;
   return (
@@ -18,6 +18,7 @@ export default function ListingDetailsModal({ listing, onClose, onContact, showC
       aria-modal="true"
       aria-label={`Details for ${listing.title}`}
       tabIndex={-1}
+      data-testid="modal-root"
       style={{
         position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh',
         background: 'rgba(17,24,39,0.21)', zIndex: 120,
@@ -45,6 +46,7 @@ export default function ListingDetailsModal({ listing, onClose, onContact, showC
         <button
           onClick={onClose}
           aria-label="Close details modal"
+          data-testid="modal-close-btn"
           style={{
             position: 'absolute', right: 16, top: 16, background: 'none',
             border: 'none', color: oceanTheme.primary, fontSize: 23, fontWeight: 700, cursor: 'pointer'

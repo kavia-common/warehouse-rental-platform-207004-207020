@@ -1,14 +1,14 @@
 import React from 'react';
 import { oceanTheme } from '../theme';
 
-// PUBLIC_INTERFACE
 /**
  * Warehouse listing summary card.
  * Props:
  *  listing: object, required
  *  onClick: function/listing (open details)
  */
-export default function ListingCard({ listing, onClick }) {
+// PUBLIC_INTERFACE
+export default function ListingCard({ listing, onClick, index }) {
   return (
     <article
       className="warehouse-listing-card"
@@ -32,7 +32,6 @@ export default function ListingCard({ listing, onClick }) {
         cursor: 'pointer',
         transition: oceanTheme.transition
       }}
-      tabIndex={0}
     >
       <div style={{
         width: '100%',
@@ -56,7 +55,9 @@ export default function ListingCard({ listing, onClick }) {
         <div style={{
           color: oceanTheme.text, fontWeight: 600, fontSize: 15,
           margin: '4px 0 9px 0'
-        }}>₹{listing.price.toLocaleString()}/mo</div>
+        }}>
+          ₹{listing.price.toLocaleString()}/mo
+        </div>
         <div style={{ flex: 1, minHeight: 32 }}>
           <ul style={{
             listStyle: 'none',
@@ -93,6 +94,7 @@ export default function ListingCard({ listing, onClick }) {
             boxShadow: '0 1.5px 5px rgba(37,99,235,0.05)'
           }}
           aria-label={`Open details for ${listing.title}`}
+          data-testid={`details-btn-${listing?.id ?? index ?? 'unknown'}`}
         >View Details</button>
       </div>
     </article>

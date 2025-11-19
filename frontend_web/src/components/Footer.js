@@ -1,11 +1,11 @@
 import React from 'react';
 import { oceanTheme } from '../theme';
 
-// PUBLIC_INTERFACE
 /**
  * Footer for Warehouse Rental Platform.
  * Shows contact info and links.
  */
+// PUBLIC_INTERFACE
 export default function Footer() {
   return (
     <footer
@@ -25,14 +25,17 @@ export default function Footer() {
       }}
     >
       <div style={{maxWidth: 1100, margin: '0 auto'}}>
-        <span>
+        <span data-testid="footer-contact">
           &copy; {new Date().getFullYear()} SHAKS Warehouse Rentals &ndash;{' '}
           <a
             href="mailto:info@shaksrentals.com"
             style={{color: oceanTheme.secondary, fontWeight: 600, textDecoration: 'underline'}}
+            aria-label="Email SHAKS Shed on Rent contact"
           >Contact Us</a>
         </span>
-        <span style={{display: 'inline-block', marginLeft: 24, color: '#cbd5e1', fontWeight: 400, fontSize: '0.93em'}}>
+        <span style={{display: 'inline-block', marginLeft: 24, color: '#cbd5e1', fontWeight: 400, fontSize: '0.93em'}}
+          data-testid="footer-copyright"
+        >
           Mumbai, Delhi, Pune, Bangalore, Hyderabad
         </span>
       </div>

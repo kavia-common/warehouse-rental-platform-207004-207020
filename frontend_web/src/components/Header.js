@@ -1,10 +1,10 @@
 import React from 'react';
 import { oceanTheme } from '../theme';
 
-// PUBLIC_INTERFACE
 /**
  * Header/nav for the Warehouse Rental Platform
  */
+// PUBLIC_INTERFACE
 export default function Header() {
   return (
     <header
@@ -31,12 +31,22 @@ export default function Header() {
         gap: 16,
       }}>
         <div style={{display: 'flex', alignItems: 'center', gap: 10}}>
-          <span aria-label="Warehouse Rental Platform" style={{
-            fontWeight: 700,
-            fontSize: 22,
-            color: oceanTheme.primary,
-            letterSpacing: 0.6,
-          }}>SHAKS <span style={{color: oceanTheme.secondary}}>Warehouses</span></span>
+          <img
+            src="/logo192.png"
+            alt="SHAKS Shed on Rent logo"
+            style={{ height: 40, marginRight: 10 }}
+            data-testid="app-logo"
+          />
+          <span
+            aria-label="SHAKS Shed on Rent"
+            data-testid="app-title"
+            style={{
+              fontWeight: 700,
+              fontSize: 22,
+              color: oceanTheme.primary,
+              letterSpacing: 0.6,
+            }}
+          >SHAKS <span style={{color: oceanTheme.secondary}}>Warehouses</span></span>
           <span
             style={{
               background: oceanTheme.secondary,
@@ -52,16 +62,19 @@ export default function Header() {
         </div>
         <nav>
           {/* In real app: add nav+active, here just Home */}
-          <a href="/" style={{
-            color: oceanTheme.text,
-            fontWeight: 500,
-            fontSize: 16,
-            textDecoration: 'none',
-            padding: '6px 0',
-            borderBottom: `2.5px solid ${oceanTheme.primary}`,
-            marginRight: 15,
-            background: 'none'
-          }}>Home</a>
+          <a href="/"
+            style={{
+              color: oceanTheme.text,
+              fontWeight: 500,
+              fontSize: 16,
+              textDecoration: 'none',
+              padding: '6px 0',
+              borderBottom: `2.5px solid ${oceanTheme.primary}`,
+              marginRight: 15,
+              background: 'none'
+            }}
+            aria-label="Home"
+          >Home</a>
         </nav>
       </div>
     </header>
