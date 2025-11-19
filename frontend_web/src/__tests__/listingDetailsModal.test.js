@@ -15,12 +15,12 @@ const listing = {
 afterEach(cleanup);
 
 describe('ListingDetailsModal', () => {
-  it('renders content, features, and ARIA attributes when shown', () => {
-    const { container } = render(
+  it('renders content, features, and ARIA attributes when shown', async () => {
+    render(
       <ListingDetailsModal listing={listing} onClose={jest.fn()} showContactForm={false} />
     );
-    // Wait for dialog to appear
-    const dialog = within(container).getByRole('dialog');
+    // Wait for dialog
+    const dialog = await screen.findByRole('dialog');
     expect(dialog).toHaveAttribute('aria-label', `Details for ${listing.title}`);
     expect(within(dialog).getByText(listing.title)).toBeInTheDocument();
     expect(within(dialog).getByText(listing.location)).toBeInTheDocument();
@@ -32,22 +32,25 @@ describe('ListingDetailsModal', () => {
     }
   });
 
-  it('fires onClose when overlay or close button is clicked', () => {
+  it('fires onClose when overlay or close button is clicked', async () => {
     const onClose = jest.fn();
-    const { container } = render(<ListingDetailsModal listing={listing} onClose={onClose} />);
-    fireEvent.click(within(container).getByTestId('modal-close-btn'));
+    render(<ListingDetailsModal listing={listing} onClose={onClose} />);
+    const dialog = await screen.findByRole('dialog');
+    fireEvent.click(within(dialog).getByTestId('modal-close-btn'));
     expect(onClose).toHaveBeenCalledTimes(1);
 
     // Overlay click
-    fireEvent.click(within(container).getByTestId('modal-root'));
+    // Modal root, using data-testid
+    fireEvent.click(within(dialog).getByTestId('modal-root'));
     expect(onClose).toHaveBeenCalledTimes(2);
   });
 
-  it('renders and triggers Contact Now button when showContactForm is true', () => {
+  it('renders and triggers Contact Now button when showContactForm is true', async () => {
     const onContact = jest.fn();
-    const { container } = render(<ListingDetailsModal listing={listing} onClose={jest.fn()} onContact={onContact} showContactForm />);
-    // Use by role and name for unique contact button inside dialog
-    const contactBtn = within(container).getByRole('button', { name: /contact now/i });
+    render(<ListingDetailsModal listing={listing} onClose={jest.fn()} onContact={onContact} showContactForm />);
+    const dialog = await screen.findByRole('dialog');
+    // Use role and name for button, in dialog
+    const contactBtn = within(dialog).getByRole('button', { name: /contact now/i });
     expect(contactBtn).toBeInTheDocument();
     fireEvent.click(contactBtn);
     expect(onContact).toHaveBeenCalled();

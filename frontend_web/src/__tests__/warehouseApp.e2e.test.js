@@ -27,16 +27,18 @@ describe('Warehouse Rental Platform Integration', () => {
 
   it('shows warehouse details on card click, and closes when clicking close', async () => {
     render(<App />);
-    // Get all detail buttons in the document
+    // Wait and click view details button
     const cardBtns = await screen.findAllByRole('button', { name: /view details/i });
     expect(cardBtns.length).toBeGreaterThan(0);
     fireEvent.click(cardBtns[0]);
+    // Await dialog and ensure accessible
     const dialog = await screen.findByRole('dialog');
     expect(dialog).toBeInTheDocument();
     expect(within(dialog).getByText(/contact now/i)).toBeInTheDocument();
-    // The close button is only labeled "Close details modal", get by testid for reliability
+    // Close via close button with testid
     const closeBtn = within(dialog).getByTestId('modal-close-btn');
     fireEvent.click(closeBtn);
+    // Wait for modal to disappear if there is animation/delay
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
   });
 
@@ -60,7 +62,8 @@ describe('Warehouse Rental Platform Integration', () => {
     // Close form using testid (unique inside contact form content)
     const closeBtn = within(dialog).getByTestId('contact-close-btn');
     fireEvent.click(closeBtn);
-    expect(screen.queryByText(/thank you for your interest/i)).not.toBeInTheDocument();
+    // Await that the thank-you message is gone (form is closed)
+    expect(await screen.queryByText(/thank you for your interest/i)).not.toBeInTheDocument();
   });
 
   it('shows error on invalid contact form', async () => {
