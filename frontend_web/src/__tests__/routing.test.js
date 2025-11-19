@@ -1,20 +1,23 @@
 import { render, screen } from '@testing-library/react';
-import { MemoryRouter, Route, Routes } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
+import AppRouter from '../AppRouter';
 
-/**
- * Skipped test enforcing routing basics. To be enabled/expanded when React Router is integrated.
- */
-describe.skip('App Routing', () => {
-  test('renders correct page for / route', () => {
-    // Replace App with actual routing ancestor when implemented
+describe('App Routing', () => {
+  test('renders Home page for / route', () => {
     render(
       <MemoryRouter initialEntries={['/']}>
-        <Routes>
-          <Route path="/" element={<div>Home</div>} />
-          <Route path="*" element={<div>404</div>} />
-        </Routes>
+        <AppRouter />
       </MemoryRouter>
     );
-    expect(screen.getByText('Home')).toBeInTheDocument();
+    expect(screen.getByText(/warehouse/i)).toBeInTheDocument();
+  });
+
+  test('renders 404 page for unknown route', () => {
+    render(
+      <MemoryRouter initialEntries={['/not-a-real-page']}>
+        <AppRouter />
+      </MemoryRouter>
+    );
+    expect(screen.getByText(/page not found/i)).toBeInTheDocument();
   });
 });

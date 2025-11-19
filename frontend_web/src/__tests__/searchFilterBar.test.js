@@ -1,17 +1,23 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
+import SearchFilterBar from '../components/SearchFilterBar';
 
-/**
- * Skipped test for future Search/Filter Bar UI.
- * This structure should be extended when components/logic are implemented.
- */
-describe.skip('Search and Filter Bar', () => {
-  test('renders search input', () => {
-    // Replace with <SearchFilterBar /> when implemented
-    render(<div><input placeholder="Search..." /></div>);
-    expect(screen.getByPlaceholderText('Search...')).toBeInTheDocument();
-  });
+describe('Search and Filter Bar', () => {
+  test('renders ARIA and fields and triggers onChange', () => {
+    const onChange = jest.fn();
+    render(
+      <SearchFilterBar
+        onChange={onChange}
+        values={{ searchText: '', location: 'Any', minArea: '', maxPrice: '', resultsText: '2 warehouses found' }}
+      />
+    );
+    expect(screen.getByRole('search')).toBeInTheDocument();
+    expect(screen.getByLabelText(/search by title/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/filter by location/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/minimum area/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/maximum price per month/i)).toBeInTheDocument();
+    expect(screen.getByText(/warehouses found/i)).toBeInTheDocument();
 
-  test('applies filter options (stub)', () => {
-    // Future implementation: interact with filter controls and assert results.
+    fireEvent.change(screen.getByLabelText(/search by title/i), { target: { value: 'Mumbai' } });
+    expect(onChange).toHaveBeenCalledWith(expect.objectContaining({ searchText: 'Mumbai' }));
   });
 });
